@@ -104,7 +104,7 @@ sparrow.config([
         controller: 'employeesLeaveCtrl',
         resolve: loader(['spw_test/js/employees_leave.js']),
       })
-      
+
       .when('/spw_test/employees_leave/:id/', {
         templateUrl: function (urlattr) {
           return '/spw_test/employees_leave/' + urlattr.id + '/';
@@ -118,7 +118,7 @@ sparrow.config([
           return '/spw_test/employee_leave/' + urlattr.id + '/';
         },
         controller: 'employeeLeaveCtrl',
-        resolve: loader(['spw_test/js/employee_leave.js?v=0.1']),
+        resolve: loader(['spw_test/js/employee_leave.js?v=0.2']),
       })
 
       .when('/spw_test/employees_leaves_master', {

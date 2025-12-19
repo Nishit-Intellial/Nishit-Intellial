@@ -5,7 +5,7 @@ from base.models import (
     AppResponse,
 )
 from base.util import Util
-from spw_test.models import Employee,LeaveType,EmployeeDesignation
+from spw_test.models import Employee, LeaveType, EmployeeDesignation, LeaveDuration
 
 
 class Lookup:
@@ -122,55 +122,72 @@ class Lookup:
         return response
 
 
-
 def lookups(request, model):
     response = []
     q = request.POST.get("query")
-    bid = request.POST.get("bid")  # base id passed when dropdown is dependent on base field
+    # bid = request.POST.get("bid")  # base id passed when dropdown is dependent on base field
     onfocus = request.POST.get("onfocus")
     selectedId = request.POST.get("id", False)
     if selectedId == "" and q == "" and not onfocus:
         response.append({"name": "", "id": ""})
         return HttpResponse(AppResponse.get(response), content_type="json")
 
-    selectedIds = []
-    if selectedId and selectedId.find(","):
-        selectedIds = [int(x) for x in selectedId.split(",")]
-
+    # selectedIds = []
+    # if selectedId and selectedId.find(","):
+    # selectedIds = [int(x) for x in selectedId.split(",")]
 
     if model == "employee":
         employees = Employee.objects.filter(is_deleted=False)
         response = []
 
         for emp in employees:
-            response.append({
-                "id": emp.id,
-                "name": f"{emp.first_name} {emp.last_name}",
-            })
-        
+            response.append(
+                {
+                    "id": emp.id,
+                    "name": f"{emp.first_name} {emp.last_name}",
+                }
+            )
+
         return HttpResponse(AppResponse.get(response), content_type="json")
-    
+
     if model == "leavetype":
         leavetypes = LeaveType.objects.filter(is_deleted=False)
         response = []
 
         for leavetype in leavetypes:
-            response.append({
-                "id": leavetype.id,
-                "name": leavetype.leave_name,
-            })
-        
+            response.append(
+                {
+                    "id": leavetype.id,
+                    "name": leavetype.leave_name,
+                }
+            )
+
         return HttpResponse(AppResponse.get(response), content_type="json")
-    
+
     if model == "designation":
         designations = EmployeeDesignation.objects.filter(is_deleted=False)
         response = []
 
         for designation in designations:
-            response.append({
-                "id": designation.id,
-                "name": designation.designation,
-            })
-        
+            response.append(
+                {
+                    "id": designation.id,
+                    "name": designation.designation,
+                }
+            )
+
         return HttpResponse(AppResponse.get(response), content_type="json")
 
+    if model == "leaveduration":
+        leavedurations = LeaveDuration.objects.filter(is_deleted=False)
+        response = []
+
+        for leaveduration in leavedurations:
+            response.append(
+                {
+                    "id": leaveduration.id,
+                    "name": leaveduration.duration,
+                }
+            )
+
+        return HttpResponse(AppResponse.get(response), content_type="json")

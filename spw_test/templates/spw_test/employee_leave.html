@@ -18,7 +18,7 @@
 
     .duration-table th, .duration-table td {
         padding: 8px;
-        text-align: center; 
+        text-align: center;
         border: 1px solid #ddd;
     }
 
@@ -156,7 +156,7 @@
   </button>
 </div>
 
-<script>
+<!-- <script>
 document.getElementById('id_leave_start_date').addEventListener('change', function(){
   var start = this.value;
   var endInput = document.getElementById('id_leave_end_date');
@@ -206,14 +206,14 @@ function updateLeaveDurationTable() {
         durationSelect.appendChild(optionElement);
       });
 
-      durationSelect.value = '1'; 
+      durationSelect.value = '1';
 
       leaveData[dateStr] = '1';
 
       durationSelect.addEventListener('change', function(event) {
         var selectedDate = event.target.closest('tr').querySelector('td:first-child').textContent;
-        leaveData[selectedDate] = event.target.value;  
-        updateHiddenInput();  
+        leaveData[selectedDate] = event.target.value;
+        updateHiddenInput();
       });
 
       durationCell.appendChild(durationSelect);
@@ -226,11 +226,11 @@ function updateLeaveDurationTable() {
       if (!hiddenInput) {
         hiddenInput = document.createElement('input');
         hiddenInput.type = 'hidden';
-        hiddenInput.name = 'leave_data'; 
+        hiddenInput.name = 'leave_data';
         hiddenInput.id = 'leaveDataInput';
         document.getElementById('frmSaveEmployeeLeave').appendChild(hiddenInput);
       }
-      hiddenInput.value = JSON.stringify(leaveData); 
+      hiddenInput.value = JSON.stringify(leaveData);
     }
 
     updateHiddenInput();
@@ -243,4 +243,4 @@ function updateLeaveDurationTable() {
 
 
 
-</script>
+</script> -->
