@@ -1,5 +1,6 @@
 import json
 import logging
+from django.db import transaction
 from django.shortcuts import render
 from base.util import Util
 from .models import Employee, Address, EmployeeLeave, LeaveType, EmployeeLeaveMaster, EmployeeDesignation, LeaveDuration
@@ -115,69 +116,70 @@ def employee(request, employee_id):
 
 def employee_save(request):
     try:
-        first_name = request.POST.get("first_name")
-        last_name = request.POST.get("last_name")
-        mobile_num = request.POST.get("mobile_num")
-        employee_id = request.POST.get("employee_id")
-        designation = EmployeeDesignation.objects.get(id=request.POST.get("designation"))
-        basic_salary = Decimal(request.POST.get("basic_salary"))
-        special_allowance = Decimal(request.POST.get("special_allowance") or 0.0)
-        other_allowance = Decimal(request.POST.get("other_allowance") or 0.0)
-        other_deduction = Decimal(request.POST.get("other_deduction") or 0.0)
+        with transaction.atomic():
+            first_name = request.POST.get("first_name")
+            last_name = request.POST.get("last_name")
+            mobile_num = request.POST.get("mobile_num")
+            employee_id = request.POST.get("employee_id")
+            designation = EmployeeDesignation.objects.get(id=request.POST.get("designation"))
+            basic_salary = Decimal(request.POST.get("basic_salary"))
+            special_allowance = Decimal(request.POST.get("special_allowance") or 0.0)
+            other_allowance = Decimal(request.POST.get("other_allowance") or 0.0)
+            other_deduction = Decimal(request.POST.get("other_deduction") or 0.0)
 
-        employee = None
-        if employee_id != "0":
-            employee = Employee.objects.get(id=employee_id)
-            employee.first_name = first_name
-            employee.last_name = last_name
-            employee.mobile_num = mobile_num
-            employee.designation = designation
-            employee.basic_salary = basic_salary
-            employee.special_allowance = special_allowance
-            employee.other_allowance = other_allowance
-            employee.other_deduction = other_deduction
-            employee.save()
+            employee = None
+            if employee_id != "0":
+                employee = Employee.objects.get(id=employee_id)
+                employee.first_name = first_name
+                employee.last_name = last_name
+                employee.mobile_num = mobile_num
+                employee.designation = designation
+                employee.basic_salary = basic_salary
+                employee.special_allowance = special_allowance
+                employee.other_allowance = other_allowance
+                employee.other_deduction = other_deduction
+                employee.save()
 
-        else:
-            employee = Employee.objects.create(
-                first_name=first_name,
-                last_name=last_name,
-                mobile_num=mobile_num,
-                designation=designation,
-                basic_salary=basic_salary,
-                special_allowance=special_allowance,
-                other_allowance=other_allowance,
-                other_deduction=other_deduction,
-            )
+            else:
+                employee = Employee.objects.create(
+                    first_name=first_name,
+                    last_name=last_name,
+                    mobile_num=mobile_num,
+                    designation=designation,
+                    basic_salary=basic_salary,
+                    special_allowance=special_allowance,
+                    other_allowance=other_allowance,
+                    other_deduction=other_deduction,
+                )
 
-            sick = LeaveType.objects.get(leave_name="Sick Leave")
-            casual = LeaveType.objects.get(leave_name="Casual Leave")
-            lwp = LeaveType.objects.get(leave_name="LWP")
+                sick = LeaveType.objects.get(leave_name="Sick Leave")
+                casual = LeaveType.objects.get(leave_name="Casual Leave")
+                lwp = LeaveType.objects.get(leave_name="LWP")
 
-            EmployeeLeave.objects.create(
-                employee=employee,
-                leave_type=sick,
-                taken_leave=0,
-                allocated=sick.count,
-                balance=sick.count,
-            )
-            EmployeeLeave.objects.create(
-                employee=employee,
-                leave_type=casual,
-                taken_leave=0,
-                allocated=casual.count,
-                balance=casual.count,
-            )
-            EmployeeLeave.objects.create(
-                employee=employee,
-                leave_type=lwp,
-                taken_leave=0,
-                allocated=casual.count,
-                balance=casual.count,
-            )
+                EmployeeLeave.objects.create(
+                    employee=employee,
+                    leave_type=sick,
+                    taken_leave=0,
+                    allocated=sick.count,
+                    balance=sick.count,
+                )
+                EmployeeLeave.objects.create(
+                    employee=employee,
+                    leave_type=casual,
+                    taken_leave=0,
+                    allocated=casual.count,
+                    balance=casual.count,
+                )
+                EmployeeLeave.objects.create(
+                    employee=employee,
+                    leave_type=lwp,
+                    taken_leave=0,
+                    allocated=casual.count,
+                    balance=casual.count,
+                )
 
-        response = {"code": 1, "msg": "Employee saved."}
-        return HttpResponse(AppResponse.get(response), content_type="json")
+            response = {"code": 1, "msg": "Employee saved."}
+            return HttpResponse(AppResponse.get(response), content_type="json")
     except Exception as e:
         logging.exception(e)
         print(f"error : {e}")
@@ -185,12 +187,13 @@ def employee_save(request):
 
 def employee_delete(request):
     try:
-        post_ids = request.POST.get("ids")
-        ids = post_ids.split(",")
-        Employee.objects.filter(id__in=ids).update(is_deleted=True)
+        with transaction.atomic():
+            post_ids = request.POST.get("ids")
+            ids = post_ids.split(",")
+            Employee.objects.filter(id__in=ids).update(is_deleted=True)
 
-        response = {"code": 1, "msg": "Employee deleted."}
-        return HttpResponse(AppResponse.get(response), content_type="json")
+            response = {"code": 1, "msg": "Employee deleted."}
+            return HttpResponse(AppResponse.get(response), content_type="json")
     except Exception as e:
         logging.exception(e)
         return HttpResponse(AppResponse.get({"error": str(e)}), content_type="application/json")
@@ -311,32 +314,33 @@ def employee_address(request, address_id):
 
 def employee_address_save(request):
     try:
+        with transaction.atomic():
 
-        address_id = request.POST.get("address_id")
-        employee_id = request.POST.get("employee")
-        address_str = request.POST.get("address")
-        pin_code = request.POST.get("pin_code")
-        district = request.POST.get("district")
-        state = request.POST.get("state")
-        country = request.POST.get("country")
+            address_id = request.POST.get("address_id")
+            employee_id = request.POST.get("employee")
+            address_str = request.POST.get("address")
+            pin_code = request.POST.get("pin_code")
+            district = request.POST.get("district")
+            state = request.POST.get("state")
+            country = request.POST.get("country")
 
-        address = None
-        if address_id != "0":
+            address = None
+            if address_id != "0":
 
-            address = Address.objects.get(id=address_id)
-            address.employee_id = employee_id
-            address.address = address_str
-            address.pin_code = pin_code
-            address.district = district
-            address.state = state
-            address.country = country
+                address = Address.objects.get(id=address_id)
+                address.employee_id = employee_id
+                address.address = address_str
+                address.pin_code = pin_code
+                address.district = district
+                address.state = state
+                address.country = country
 
-            address.save()
+                address.save()
 
-        else:
-            address = Address.objects.create(employee_id=employee_id, address=address_str, pin_code=pin_code, state=state, district=district, country=country)
-        response = {"code": 1, "msg": "Employee address saved."}
-        return HttpResponse(AppResponse.get(response), content_type="json")
+            else:
+                address = Address.objects.create(employee_id=employee_id, address=address_str, pin_code=pin_code, state=state, district=district, country=country)
+            response = {"code": 1, "msg": "Employee address saved."}
+            return HttpResponse(AppResponse.get(response), content_type="json")
 
     except Exception as e:
         logging.exception(e)
@@ -345,13 +349,14 @@ def employee_address_save(request):
 
 def employee_address_delete(request):
     try:
-        post_ids = request.POST.get("ids")
-        ids = post_ids.split(",")
+        with transaction.atomic():
+            post_ids = request.POST.get("ids")
+            ids = post_ids.split(",")
 
-        Address.objects.filter(id__in=ids).update(is_deleted=True)
+            Address.objects.filter(id__in=ids).update(is_deleted=True)
 
-        response = {"code": 1, "msg": "Employee Address deleted."}
-        return HttpResponse(AppResponse.get(response), content_type="json")
+            response = {"code": 1, "msg": "Employee Address deleted."}
+            return HttpResponse(AppResponse.get(response), content_type="json")
     except Exception as e:
         logging.exception(e)
         return HttpResponse(AppResponse.get({"error": str(e)}), content_type="application/json")
@@ -463,140 +468,142 @@ def employee_leave(request, employeeleave_id):
 
 def employee_leave_save(request):
     try:
-        # leave_id = request.POST.get("employeeleave_id")
-        employee_id = request.POST.get("employee")
-        leave_type_id = request.POST.get("leavetype")
-        leave_start_date = request.POST.get("leave_start_date")
-        leave_end_date = request.POST.get("leave_end_date")
-        reason = request.POST.get("reason")
-        # leave_data_json = request.POST.get("leave_data")
+        with transaction.atomic():
+            # leave_id = request.POST.get("employeeleave_id")
+            employee_id = request.POST.get("employee")
+            leave_type_id = request.POST.get("leavetype")
+            leave_start_date = request.POST.get("leave_start_date")
+            leave_end_date = request.POST.get("leave_end_date")
+            reason = request.POST.get("reason")
+            # leave_data_json = request.POST.get("leave_data")
 
-        # leave_data = {}
-        # if leave_data_json:
-        #     leave_data = json.loads(leave_data_json)
+            # leave_data = {}
+            # if leave_data_json:
+            #     leave_data = json.loads(leave_data_json)
 
-        leave_start_date = datetime.strptime(leave_start_date, "%Y-%m-%d").date()
-        leave_end_date = datetime.strptime(leave_end_date, "%Y-%m-%d").date()
-        current_date = leave_start_date
+            leave_start_date = datetime.strptime(leave_start_date, "%Y-%m-%d").date()
+            leave_end_date = datetime.strptime(leave_end_date, "%Y-%m-%d").date()
+            current_date = leave_start_date
 
-        leave_to_create = []
+            leave_to_create = []
 
-        continuous_start_date = None
-        continuous_duration = Decimal(0.0)
+            continuous_start_date = None
+            continuous_duration = Decimal(0.0)
 
-        while current_date <= leave_end_date:
+            while current_date <= leave_end_date:
 
-            duration_id = request.POST.get(f"id_{current_date}")
+                duration_id = request.POST.get(f"id_{current_date}")
 
-            if duration_id:
-                current_duration = Decimal(LeaveDuration.objects.filter(id=duration_id).values_list("duration", flat=True).first()) or Decimal("0.0")
-            else:
-                current_duration = Decimal("0.0")
-
-            existing_leaves = EmployeeLeaveMaster.objects.filter(
-                employee_id=employee_id, is_deleted=False, leave_start_date__lte=current_date, leave_end_date__gte=current_date
-            ).exclude(leave_status="Rejected")
-
-            if existing_leaves.exists():
-                total_existing_duration = sum(leave.duration for leave in existing_leaves)
-
-                if total_existing_duration + current_duration > 1:
-                    over_dates = []
-
-                    while current_date <= leave_end_date:
-
-                        duration_id = request.POST.get(f"id_{current_date}")
-                        if duration_id:
-                            current_duration = Decimal(LeaveDuration.objects.filter(id=duration_id).values_list("duration", flat=True).first()) or Decimal("0.0")
-                        else:
-                            current_duration = Decimal("0.0")
-                        existing_leaves = EmployeeLeaveMaster.objects.filter(
-                            employee_id=employee_id, is_deleted=False, leave_start_date__lte=current_date, leave_end_date__gte=current_date
-                        ).exclude(leave_status="Rejected")
-
-                        if existing_leaves.exists():
-                            total_existing_duration = sum(leave.duration for leave in existing_leaves)
-                            if total_existing_duration + current_duration > 1:
-                                over_dates.append(date_to_str(current_date))
-
-                        current_date += timedelta(days=1)
-
-                    return HttpResponse(
-                        AppResponse.get({"code": 0, "error": f"You cannot apply for more than 1 day of leave on {list_to_str(over_dates)[:-2]}."}), content_type="application/json"
-                    )
+                if duration_id:
+                    current_duration = Decimal(LeaveDuration.objects.filter(id=duration_id).values_list("duration", flat=True).first()) or Decimal("0.0")
                 else:
-                    leave_to_create.append(
-                        {
-                            "employee_id": employee_id,
-                            "leave_type_id": leave_type_id,
-                            "leave_start_date": current_date,
-                            "leave_end_date": current_date,
-                            "reason": reason,
-                            "duration": current_duration,
-                        }
-                    )
-            else:
-                if current_duration == 1:
-                    if continuous_start_date is None:
-                        continuous_start_date = current_date
-                    continuous_duration += current_duration
-                else:
+                    current_duration = Decimal("0.0")
 
-                    if continuous_start_date is not None:
+                existing_leaves = EmployeeLeaveMaster.objects.filter(
+                    employee_id=employee_id, is_deleted=False, leave_start_date__lte=current_date, leave_end_date__gte=current_date
+                ).exclude(leave_status="Rejected")
+
+                if existing_leaves.exists():
+                    total_existing_duration = sum(leave.duration for leave in existing_leaves)
+
+                    if total_existing_duration + current_duration > 1:
+                        over_dates = []
+
+                        while current_date <= leave_end_date:
+
+                            duration_id = request.POST.get(f"id_{current_date}")
+                            if duration_id:
+                                current_duration = Decimal(LeaveDuration.objects.filter(id=duration_id).values_list("duration", flat=True).first()) or Decimal("0.0")
+                            else:
+                                current_duration = Decimal("0.0")
+                            existing_leaves = EmployeeLeaveMaster.objects.filter(
+                                employee_id=employee_id, is_deleted=False, leave_start_date__lte=current_date, leave_end_date__gte=current_date
+                            ).exclude(leave_status="Rejected")
+
+                            if existing_leaves.exists():
+                                total_existing_duration = sum(leave.duration for leave in existing_leaves)
+                                if total_existing_duration + current_duration > 1:
+                                    over_dates.append(date_to_str(current_date))
+
+                            current_date += timedelta(days=1)
+
+                        return HttpResponse(
+                            AppResponse.get({"code": 0, "error": f"You cannot apply for more than 1 day of leave on {list_to_str(over_dates)[:-2]}."}),
+                            content_type="application/json",
+                        )
+                    else:
                         leave_to_create.append(
                             {
                                 "employee_id": employee_id,
                                 "leave_type_id": leave_type_id,
-                                "leave_start_date": continuous_start_date,
-                                "leave_end_date": current_date - timedelta(days=1),
+                                "leave_start_date": current_date,
+                                "leave_end_date": current_date,
                                 "reason": reason,
-                                "duration": continuous_duration,
+                                "duration": current_duration,
                             }
                         )
+                else:
+                    if current_duration == 1:
+                        if continuous_start_date is None:
+                            continuous_start_date = current_date
+                        continuous_duration += current_duration
+                    else:
 
-                    leave_to_create.append(
-                        {
-                            "employee_id": employee_id,
-                            "leave_type_id": leave_type_id,
-                            "leave_start_date": current_date,
-                            "leave_end_date": current_date,
-                            "reason": reason,
-                            "duration": current_duration,
-                        }
-                    )
-                    continuous_start_date = None
-                    continuous_duration = Decimal(0.0)
+                        if continuous_start_date is not None:
+                            leave_to_create.append(
+                                {
+                                    "employee_id": employee_id,
+                                    "leave_type_id": leave_type_id,
+                                    "leave_start_date": continuous_start_date,
+                                    "leave_end_date": current_date - timedelta(days=1),
+                                    "reason": reason,
+                                    "duration": continuous_duration,
+                                }
+                            )
 
-            current_date += timedelta(days=1)
+                        leave_to_create.append(
+                            {
+                                "employee_id": employee_id,
+                                "leave_type_id": leave_type_id,
+                                "leave_start_date": current_date,
+                                "leave_end_date": current_date,
+                                "reason": reason,
+                                "duration": current_duration,
+                            }
+                        )
+                        continuous_start_date = None
+                        continuous_duration = Decimal(0.0)
 
-        if continuous_start_date is not None:
-            leave_to_create.append(
-                {
-                    "employee_id": employee_id,
-                    "leave_type_id": leave_type_id,
-                    "leave_start_date": continuous_start_date,
-                    "leave_end_date": current_date - timedelta(days=1),
-                    "reason": reason,
-                    "duration": continuous_duration,
-                }
-            )
+                current_date += timedelta(days=1)
 
-        if leave_to_create:
-            EmployeeLeaveMaster.objects.bulk_create(
-                [
-                    EmployeeLeaveMaster(
-                        employee_id=leave["employee_id"],
-                        leave_type_id=leave["leave_type_id"],
-                        leave_start_date=leave["leave_start_date"],
-                        leave_end_date=leave["leave_end_date"],
-                        reason=leave["reason"],
-                        duration=leave["duration"],
-                    )
-                    for leave in leave_to_create
-                ]
-            )
+            if continuous_start_date is not None:
+                leave_to_create.append(
+                    {
+                        "employee_id": employee_id,
+                        "leave_type_id": leave_type_id,
+                        "leave_start_date": continuous_start_date,
+                        "leave_end_date": current_date - timedelta(days=1),
+                        "reason": reason,
+                        "duration": continuous_duration,
+                    }
+                )
 
-        return HttpResponse(AppResponse.get({"code": 1, "msg": "Employee Leave saved."}), content_type="json")
+            if leave_to_create:
+                EmployeeLeaveMaster.objects.bulk_create(
+                    [
+                        EmployeeLeaveMaster(
+                            employee_id=leave["employee_id"],
+                            leave_type_id=leave["leave_type_id"],
+                            leave_start_date=leave["leave_start_date"],
+                            leave_end_date=leave["leave_end_date"],
+                            reason=leave["reason"],
+                            duration=leave["duration"],
+                        )
+                        for leave in leave_to_create
+                    ]
+                )
+
+            return HttpResponse(AppResponse.get({"code": 1, "msg": "Employee Leave saved."}), content_type="json")
 
     except Exception as e:
         logging.exception(e)
@@ -605,12 +612,13 @@ def employee_leave_save(request):
 
 def employee_leave_delete(request):
     try:
-        post_ids = request.POST.get("ids")
-        ids = post_ids.split(",")
+        with transaction.atomic():
+            post_ids = request.POST.get("ids")
+            ids = post_ids.split(",")
 
-        EmployeeLeaveMaster.objects.filter(id__in=ids).update(is_deleted=True)
+            EmployeeLeaveMaster.objects.filter(id__in=ids).update(is_deleted=True)
 
-        return HttpResponse(AppResponse.get({"code": 1, "msg": "Employee Leave Canceled."}), content_type="json")
+            return HttpResponse(AppResponse.get({"code": 1, "msg": "Employee Leave Canceled."}), content_type="json")
 
     except Exception as e:
         logging.exception(e)
@@ -747,37 +755,39 @@ def employee_leave_status(request):
     id = request.POST.get("leaveId")
     if status == "approve":
         try:
+            with transaction.atomic():
 
-            employee_leave_master = EmployeeLeaveMaster.objects.get(id=id)
-            balance = Decimal(EmployeeLeave.objects.get(employee=employee_leave_master.employee, leave_type=employee_leave_master.leave_type).balance)
-            duration = employee_leave_master.duration
+                employee_leave_master = EmployeeLeaveMaster.objects.get(id=id)
+                balance = Decimal(EmployeeLeave.objects.get(employee=employee_leave_master.employee, leave_type=employee_leave_master.leave_type).balance)
+                duration = employee_leave_master.duration
 
-            if employee_leave_master.leave_status == "Pending":
-                if balance >= duration:
-                    EmployeeLeave.objects.filter(employee=employee_leave_master.employee, leave_type=employee_leave_master.leave_type).update(
-                        taken_leave=F("taken_leave") + duration, balance=F("balance") - duration
-                    )
+                if employee_leave_master.leave_status == "Pending":
+                    if balance >= duration:
+                        EmployeeLeave.objects.filter(employee=employee_leave_master.employee, leave_type=employee_leave_master.leave_type).update(
+                            taken_leave=F("taken_leave") + duration, balance=F("balance") - duration
+                        )
 
-                    EmployeeLeaveMaster.objects.filter(id=id).update(leave_status="Approved")
+                        EmployeeLeaveMaster.objects.filter(id=id).update(leave_status="Approved")
 
-                    return HttpResponse(AppResponse.get({"code": 1, "msg": "Leave approved successfully"}), content_type="json")
+                        return HttpResponse(AppResponse.get({"code": 1, "msg": "Leave approved successfully"}), content_type="json")
+                    else:
+                        return HttpResponse(AppResponse.get({"code": 0, "error": "Employee doesn't have enough balance"}), content_type="json")
                 else:
-                    return HttpResponse(AppResponse.get({"code": 0, "error": "Employee doesn't have enough balance"}), content_type="json")
-            else:
-                return HttpResponse(AppResponse.get({"code": 0, "error": f"Leave status is already {employee_leave_master.leave_status}"}), content_type="json")
+                    return HttpResponse(AppResponse.get({"code": 0, "error": f"Leave status is already {employee_leave_master.leave_status}"}), content_type="json")
 
         except Exception as e:
             return HttpResponse(AppResponse.get({"code": 0, "error": "An error occurred while processing the leave request", "msg": e}), content_type="json")
 
     elif status == "reject":
         try:
-            employee_leave_master = EmployeeLeaveMaster.objects.get(id=id)
+            with transaction.atomic():
+                employee_leave_master = EmployeeLeaveMaster.objects.get(id=id)
 
-            if employee_leave_master.leave_status == "Pending":
-                EmployeeLeaveMaster.objects.filter(id=id).update(leave_status="Rejected")
-                return HttpResponse(AppResponse.get({"code": 1, "msg": "Leave rejected successfully"}), content_type="json")
-            else:
-                return HttpResponse(AppResponse.get({"code": 0, "error": f"Leave status is already {employee_leave_master.leave_status}"}), content_type="json")
+                if employee_leave_master.leave_status == "Pending":
+                    EmployeeLeaveMaster.objects.filter(id=id).update(leave_status="Rejected")
+                    return HttpResponse(AppResponse.get({"code": 1, "msg": "Leave rejected successfully"}), content_type="json")
+                else:
+                    return HttpResponse(AppResponse.get({"code": 0, "error": f"Leave status is already {employee_leave_master.leave_status}"}), content_type="json")
 
         except Exception as e:
             return HttpResponse(AppResponse.get({"code": 0, "error": "An error occurred while processing the leave request", "msg": e}), content_type="json")
