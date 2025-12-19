@@ -1,0 +1,49 @@
+default_stages: [commit]
+
+ci:
+  skip: true
+
+fail_fast: false
+
+repos:
+
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+        language_version: python3
+        pass_filenames: true
+        args: ["--line-length=180"]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-ast
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      # - id: check-added-large-files
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.11.5
+    hooks:
+      - id: ruff
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.19.1
+    hooks:
+      - id: pyupgrade
+        args: ["--py39-plus"]
+
+  - repo: local
+    hooks:
+      - id: vale
+        name: Vale Linter
+        entry: vale
+        language: system
+        types: [python, markdown, text]
+        args:
+          - "--minAlertLevel=error"
+          - "--config=.vale.ini"
+        pass_filenames: true
+        files: \.(py|md|txt)$
