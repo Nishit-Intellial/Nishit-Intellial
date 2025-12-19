@@ -1,0 +1,135 @@
+<style>
+    
+    .applyBtn{
+        background:#337ab7;
+        color: white;
+    }
+
+    .applyBtn:hover{
+        background: white;
+        color: black;
+        border: 1px solid #bebebe;
+    }
+    
+</style>
+
+<div class="modal-body details-body">
+        <!-- Main Tabs -->
+        <ul class="nav nav-tabs">
+          <li class="active">
+            <a class="show-tab" href="#basic_details" data-toggle="tab">Basic Details</a>
+          </li>
+          <li>
+            <a class="show-tab" href="#salary_details" data-toggle="tab">Salary Details</a>
+          </li>
+        </ul>
+
+        <form
+          id="frmSaveEmployee"
+          action="/spw_test/employee_save/"
+          method="POST"
+          role="form"
+          class="form-horizontal"
+          enctype="multipart/form-data"
+        >
+          {% csrf_token %}
+
+          <div class="tab-content" style="margin-top:15px;">
+            <!-- Basic Details Tab -->
+            <div class="tab-pane active " id="basic_details">
+              <div class="row">
+                <div class="col-md-12 col-sm-12">
+                  <div class="form-group">
+                    <label for="id_first_name" class="control-label col-sm-2 required">First name</label>
+                    <div class="col-sm-4">
+                      <input class="form-control" id="id_first_name" name="first_name" type="text" required value="{{ employee.first_name }}">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="id_last_name" class="control-label col-sm-2 required">Last name</label>
+                    <div class="col-sm-4">
+                      <input class="form-control" id="id_last_name" name="last_name" type="text" required value="{{ employee.last_name }}">
+                    </div>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="id_designation" class="control-label col-sm-2 required">Designation</label>
+                    <div class="col-sm-4">
+                      <input type="text" name="designation" id="id_designation"  value='[{{employee.designation.id}}]'>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="id_mobile_no" class="control-label col-sm-2 required">Mobile number</label>
+                    <div class="col-sm-4">
+                      <input class="form-control" id="id_mobile_no" name="mobile_num" type="number" minlength="10" required value="{{ employee.mobile_num }}">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Salary Details Tab -->
+            <div class="tab-pane " id="salary_details">
+              
+              <div class="form-group">
+                    <label for="id_basic_salary" class="control-label col-sm-2 required">Basic Salary</label>
+                    <div class="col-sm-4">
+                      <input class="form-control" id="id_basic_salary" name="basic_salary" type="number" required value="{{ employee.basic_salary }}">
+                    </div>
+              </div>
+              <div class="form-group">
+                    <label for="id_special_allowance" class="control-label col-sm-2">Special Allowance</label>
+                    <div class="col-sm-4">
+                      <input class="form-control" id="id_special_allowance" name="special_allowance" type="number" value="{{ employee.special_allowance | default:0.00 }}">
+                    </div>
+              </div>
+              <div class="form-group">
+                    <label for="id_other_allowance" class="control-label col-sm-2">Other Allowance</label>
+                    <div class="col-sm-4">
+                      <input class="form-control" id="id_other_allowance" name="other_allowance" type="number" value="{{ employee.other_allowance | default:0.00 }}">
+                    </div>
+              </div>
+              <div class="form-group">
+                    <label for="id_other_deduction" class="control-label col-sm-2">Other Deduction</label>
+                    <div class="col-sm-4">
+                      <input class="form-control" id="id_other_deduction" name="other_deduction" type="number" value="{{ employee.other_deduction | default:0.00 }}">
+                    </div>
+              </div>
+
+
+            </div>
+          </div>
+        </form>
+      </div>
+
+<div class="modal-footer details-footer" role="tablist">
+  <button
+    class="btn"
+    data-dismiss="modal"
+    aria-hidden="true"
+    id="btnClose"
+    ng-click="onClose($event);"
+  >
+    Close
+  </button>
+  <button
+    class="applyBtn btn btn-primary"
+    ng-click="saveEmployee($event);"
+    ng-disabled="btnDisabled"
+    edit-mode="true"
+  >
+    Save
+  </button>
+  <button
+    id="idEditBtn"
+    style="display: none;"
+    class="btn btn-primary pull-right"
+    ng-click="saveEmployee($event);"
+    ng-disabled="btnDisabled"
+    edit-mode="false"
+  >
+    Edit
+  </button>
+</div>

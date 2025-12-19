@@ -1,0 +1,246 @@
+<style>
+    .applyBtn {
+        background: #337ab7;
+        color: white;
+    }
+
+    .applyBtn:hover {
+        background: white;
+        color: black;
+        border: 1px solid #bebebe;
+    }
+
+    .duration-table {
+        margin-top: 20px;
+        width: 41%;
+        border-collapse: collapse;
+    }
+
+    .duration-table th, .duration-table td {
+        padding: 8px;
+        text-align: center; 
+        border: 1px solid #ddd;
+    }
+
+    .duration-table select {
+        width: 80%;
+        height: 100%;
+        padding: 5px;
+    }
+
+    .duration-table th {
+        background-color: #f2f2f2;
+    }
+</style>
+
+<div class="modal-body details-body">
+  <form
+    id="frmSaveEmployeeLeave"
+    action="/spw_test/employee_leave_save/"
+    method="POST"
+    role="form"
+    class="form-horizontal"
+    enctype="multipart/form-data"
+  >
+    {% csrf_token %}
+
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+
+        <!-- EMPLOYEE DROPDOWN -->
+        <div class="form-group">
+          <label for="id_employee" class="control-label col-sm-1 required">Employee</label>
+          <div class="col-sm-4">
+            <input type="text" name="employee" id="id_employee" value='[{{employee_leave.employee_id}}]'>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="id_leavetype" class="control-label col-sm-1 required">Leave Type</label>
+          <div class="col-sm-4">
+            <input type="text" name="leavetype" id="id_leavetype" value='[{{employee_leave.leave_type_id}}]'>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label required for="id_start_date" class="control-label col-sm-1 required">Start Date</label>
+          <div class="col-sm-4">
+            <input
+              class="form-control"
+              id="id_leave_start_date"
+              type="date"
+              name="leave_start_date"
+              required
+              value="{{ employee_leave.leave_start_date }}"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label required for="id_end_date" class="control-label col-sm-1 required">End Date</label>
+          <div class="col-sm-4">
+            <input
+              class="form-control"
+              id="id_leave_end_date"
+              type="date"
+              name="leave_end_date"
+              required
+              value="{{ employee_leave.leave_end_date }}"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label required for="id_reason" class="control-label col-sm-1 required">Reason</label>
+          <div class="col-sm-4">
+            <input
+              class="form-control"
+              id="id_reason"
+              type="text"
+              name="reason"
+              required
+              value="{{ employee_leave.reason }}"
+            />
+          </div>
+        </div>
+
+        <!-- Table for Date and Duration -->
+        <div class="form-group" id="leaveDurationTableContainer" style="display: none;">
+          <table class="duration-table" id="durationTable">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Duration</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Rows will be added dynamically -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer details-footer" role="tablist">
+  <button
+    class="btn"
+    data-dismiss="modal"
+    aria-hidden="true"
+    id="btnClose"
+    ng-click="onClose($event);"
+  >
+    Close
+  </button>
+
+  <button
+    class="applyBtn btn btn-primary"
+    ng-click="saveEmployeeLeave($event);"
+    ng-disabled="btnDisabled"
+    edit-mode="true"
+  >
+    Save
+  </button>
+
+  <button
+    id="idEditBtn"
+    style="display: none;"
+    class="btn btn-primary pull-right"
+    ng-click="saveEmployeeLeave($event);"
+    ng-disabled="btnDisabled"
+    edit-mode="false"
+  >
+    Edit
+  </button>
+</div>
+
+<script>
+document.getElementById('id_leave_start_date').addEventListener('change', function(){
+  var start = this.value;
+  var endInput = document.getElementById('id_leave_end_date');
+  endInput.min = start;
+
+  if (endInput.value && endInput.value < start) {
+    endInput.value = start;
+  }
+
+  updateLeaveDurationTable();
+});
+
+document.getElementById('id_leave_end_date').addEventListener('change', function(){
+  updateLeaveDurationTable();
+});
+
+
+function updateLeaveDurationTable() {
+  var startDate = document.getElementById('id_leave_start_date').value;
+  var endDate = document.getElementById('id_leave_end_date').value;
+
+  if (startDate && endDate) {
+    var start = new Date(startDate);
+    var end = new Date(endDate);
+
+    var tableBody = document.getElementById('durationTable').getElementsByTagName('tbody')[0];
+    tableBody.innerHTML = '';
+
+    var leaveData = {};
+
+    var currentDate = start;
+    while (currentDate <= end) {
+      var row = tableBody.insertRow();
+      var dateCell = row.insertCell(0);
+      var durationCell = row.insertCell(1);
+
+      var dateStr = currentDate.toISOString().split('T')[0];
+      dateCell.textContent = dateStr;
+
+      var durationSelect = document.createElement('select');
+      durationSelect.style.borderColor = '#d7d3d3';
+      var options = ['0.25', '0.50', '1'];
+      options.forEach(function(option) {
+        var optionElement = document.createElement('option');
+        optionElement.value = option;
+        optionElement.textContent = option;
+        durationSelect.appendChild(optionElement);
+      });
+
+      durationSelect.value = '1'; 
+
+      leaveData[dateStr] = '1';
+
+      durationSelect.addEventListener('change', function(event) {
+        var selectedDate = event.target.closest('tr').querySelector('td:first-child').textContent;
+        leaveData[selectedDate] = event.target.value;  
+        updateHiddenInput();  
+      });
+
+      durationCell.appendChild(durationSelect);
+
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    function updateHiddenInput() {
+      var hiddenInput = document.getElementById('leaveDataInput');
+      if (!hiddenInput) {
+        hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'leave_data'; 
+        hiddenInput.id = 'leaveDataInput';
+        document.getElementById('frmSaveEmployeeLeave').appendChild(hiddenInput);
+      }
+      hiddenInput.value = JSON.stringify(leaveData); 
+    }
+
+    updateHiddenInput();
+
+    document.getElementById('leaveDurationTableContainer').style.display = 'block';
+  } else {
+    document.getElementById('leaveDurationTableContainer').style.display = 'none';
+  }
+}
+
+
+
+</script>

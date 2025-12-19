@@ -1,0 +1,46 @@
+<div class="modal-body details-body">
+    <div class="mn-listing tab-search" style="width: 100% !important;">
+        <div class="tab-content tab-search-active">
+            <form autocomplete="off">
+                <nit-advanced-searchbox ng-model="searchParams1" parameters="availableSearchParams1"
+                    index="1"></nit-advanced-searchbox>
+            </form>
+        </div>
+    </div>
+    <div class="lst-container">
+        <div id="gridCon">
+            <table datatable dt-options="dtOptions1" dt-columns="dtColumns1" dt-instance="dtInstance1"
+                class="row-border hover"></table>
+        </div>
+    </div>
+</div>
+<style>
+     .applyBtn{
+        background:#337ab7;
+        color: white;
+    }
+    .applyBtn:hover{
+        background: white;
+        color: black;
+        border: 1px solid #bebebe;
+    }
+
+</style>
+
+<script type="text/ng-template" id="top_action_bar">
+  <div class="focus-inner button-bar">
+      <input type="button" class="applyBtn btn btn-sm btn-primary" id="salary_slip"value="Generate Salary Slip"  ng-disabled="btnModelEditDisable" ng-click=""></input>
+      <input type="button" class="applyBtn btn btn-sm btn-primary" id="addNew"value="Add new" ng-click="onAdd($event);"></input>
+        <div class="btn-group">
+            <button id="toggleMenu" type="button" class="btn btn-default dropdown-toggle more" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                <i class="icon-hamburger-menu-1" aria-hidden="true"></i>
+            </button>
+            <ul id = "dropdownMenuRight" class="dropdown-menu dropdown-menu-org dropdown-menu-right">
+                <li>
+                    <input type="button" class="btn btn-primary btn-sm" value="Edit" id="btnEditMo" ng-click="onEdit($event);" ng-disabled="btnModelEditDisable"></input>
+                    <input type="button" class="btn btn-primary btn-sm" value="Delete" id="btnDeleteMo" ng-click="onDelete(employee.id);" ng-disabled="btnModelDeleteDisable"></input>
+                </li>
+            </ul>
+        </div>
+  </div>
+</script>

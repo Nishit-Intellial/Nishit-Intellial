@@ -1,0 +1,264 @@
+<style>
+  
+  .modal-body{
+    font-family: Arial, sans-serif !important;
+  }
+
+  .applyBtn{
+    background:#337ab7;
+    color: white;
+  }
+
+  .applyBtn:hover{
+    background: white;
+    color: black;
+    border: 1px solid #bebebe;
+  }
+
+  .salary-slip {
+    padding: 20px;
+    font-family: Arial, sans-serif !important;
+  }
+
+  .salary-title { 
+    color: #1c3b4f; 
+    font-weight: 700; 
+  }
+
+  .section-title {
+    background-color: #1c3b4f;
+    color: #fff;
+    font-weight: bold;
+    padding: 6px 10px;
+    margin-top: 20px;
+  }
+
+  table {
+    width: 100%;
+    table-layout: fixed;
+    border: 2px solid #bebebe;
+    border-collapse: collapse; 
+  }
+
+  th, td {
+    height: 45px;
+    padding: 8px 10px;
+    vertical-align: middle;
+    word-wrap: break-word;
+    white-space: normal;
+    border: 1px solid #bebebe;
+  }
+
+  th{
+    text-align: left !important;
+  }
+
+  .amount{
+    text-align: right !important;
+  }
+
+  .table th { 
+    font-weight: 700;
+    color: black !important;
+  } 
+  .net{
+    margin-top: 20px;
+  }
+
+  .net-salary {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1c3b4f;
+  }
+
+  .salary-input {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid black;
+    outline: none;
+  }
+ 
+  .text-end input,.text-end {
+    text-align: right;
+  }
+
+  .attendance th,.attendance{
+    text-align: center !important;
+  }
+
+  .selected-month{
+    border: none;
+  }
+
+  .pdf-footer {
+      position: fixed;     
+      left: 28%;            
+      transform: translateX(-50%); 
+      font-size: 12px;
+      color: #000;
+      text-align: center;    
+  }
+
+  .salary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .company-info p {
+    margin: 0;
+    width: 100%;
+  }
+
+  .pay-period {
+    float: right;
+    font-weight: 600;
+  }
+
+</style>
+
+<div class="modal-body details-body">
+
+  <div class="salary-slip">
+    <div class="salary-header mb-6 pb-5">
+      <div class="company-info">
+        <h1 class="salary-title mb-1">INTELLIAL SOLUTIONS PVT. LTD.</h1>
+        <p>
+          A-903, Empire Business Hub, Science City Rd, Sola,<br>
+          Ahmedabad, Gujarat, India 
+          <span class="pay-period">Pay Period : {{ selected_month }}</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="section-title">Employee Details</div>
+  <table class="table table-bordered mb-4">
+    <tbody>
+      <tr>
+        <th>Employee Name</th>
+        <td>{{ emp_name }}</td>
+        <th>Employee ID</th>
+        <td>employee_{{ emp_id }}</td>
+      </tr>
+      <tr>
+        <th>Designation</th>
+        <td>{{ emp_designation }}</td>
+        <th></th>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="section-title ">Attendance Details</div>
+  <table class="table table-bordered mb-4 attendance">
+    <tbody>
+      <tr>
+        <th>Total Days</th>
+        <th>Leaves Taken</th>
+        <th>LWP</th>
+      </tr>
+      <tr>
+        <td id="totalDays">{{ total_days }}</td>
+        <td id="leavesTaken">{{ leaves_taken }}</td>
+        <td id="lwpf">{{ lwp }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="section-title">Salary Breakdown</div>
+  <table class="table table-bordered mb-4">
+    <thead>
+      <tr>
+        <th>Earnings</th>
+        <th class="amount text-end">Amount (₹)</th>
+        <th>Deductions</th>
+        <th class="text-end amount">Amount (₹)</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>Basic Salary</td>
+        <td class="text-end" id="basic_salary">{{ basic }}</td>
+        <td>Provident Fund (12%)</td>
+        <td class="text-end" id="pf_salary">{{ pf }}</td>
+      </tr>
+
+      <tr>
+        <td>House Rent Allowance (40%)</td>
+        <td class="text-end" id="hra_salary">{{ hra }}</td>
+        <td>LWP Deduction</td>
+        <td class="text-end" id="lwp_deduction">{{ lwp_deduction }}</td>
+      </tr>
+
+      <tr>
+        <td>Special Allowance</td>
+        <td class="text-end" id="special_allowance">{{ special }}</td>
+        <td>Other Deductions</td>
+        <td class="text-end" id="other_deduction">{{ other_deduction }}</td>
+      </tr>
+
+      <tr>
+        <td>Other Allowances</td>
+        <td class="text-end" id="other_allowance">{{ other_allowance }}</td>
+        <td>TDS (Income Tax)</td>
+        <td class="text-end">
+          {{ tds }}
+        </td>
+      </tr>
+
+      <tr>
+        <td>Conveyance Allowance</td>
+        <td class="text-end">
+          {{ conveyance }}
+        </td>
+        <td>Professional Tax</td>
+        <td class="text-end" id="professional_tax">{{ professional_tax }}</td>
+      </tr>
+
+      <tr>
+        <td>Medical Allowance</td>
+        <td class="text-end">
+          {{ medical }}
+        </td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tbody>
+
+    <tfoot>
+      <tr class="fw-bold">
+        <th>Gross Earnings</th>
+        <th class="amount text-end" id="grossEarnings">{{ gross_earnings }}</th>
+        <th>Total Deductions</th>
+        <th class="text-end amount" id="totalDeductions">{{ total_deductions }}</th>
+      </tr>
+    </tfoot>
+  </table>
+
+  <table class="table table-bordered net">
+    <tr>
+      <th>Net Salary Payable</th>
+      <td class="text-end net-salary" id="netSalary">₹{{ net_salary }}</td>
+    </tr>
+  </table>
+
+  <p class="pdf-footer">
+  This is a computer-generated document and does not require a signature.
+  </p>
+
+
+</div>
+
+<input type="hidden" id="basic" value="{{ basic }}">
+<input type="hidden" id="hra" value="{{ hra }}">
+<input type="hidden" id="special" value="{{ special }}">
+<input type="hidden" id="otherAllowance" value="{{ other_allowance }}">
+<input type="hidden" id="pf" value="{{ pf }}">
+<input type="hidden" id="lwp" value="{{ lwp }}">
+<input type="hidden" id="lwpDeduction" value="{{ lwp_deduction }}">
+<input type="hidden" id="otherDeduction" value="{{ other_deduction }}">
+<input type="hidden" id="professionalTax" value="{{ professional_tax }}">

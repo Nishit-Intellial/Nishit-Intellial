@@ -1,0 +1,258 @@
+<style>
+  .applyBtn{
+    background:#337ab7;
+    color: white;
+  }
+  .applyBtn:hover{
+    background: white;
+    color: black;
+    border: 1px solid hsl(0, 0%, 75%);
+  }
+
+  .salary-slip {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 8px 25px rgba(28, 59, 79, 0.25);
+    background-color: #fff;
+    border-radius: 6px;
+  }
+
+  .salary-title { 
+    color: #1c3b4f; 
+    font-weight: 700; 
+  }
+
+  .section-title {
+    background-color: #1c3b4f;
+    color: #fff;
+    font-weight: bold;
+    padding: 6px 10px;
+    margin-top: 20px;
+  }
+
+  table {
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  th, td {
+    height: 45px;
+    padding: 8px 10px;
+    vertical-align: middle;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+
+  .table th { 
+    font-weight: 700;
+    color: black !important;
+  }
+
+  .net-salary {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1c3b4f;
+  }
+
+  .salary-input {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid black;
+    outline: none;
+  }
+ 
+  .text-end input,.text-end {
+    text-align: right;
+  }
+
+  .attendance th,.attendance{
+    text-align: center !important;
+  }
+</style>
+
+
+<div class="modal-body details-body">
+
+<div class="salary-slip">
+
+  <!-- HEADER -->
+  <div class="mb-6 pb-5">
+    <h4 class="salary-title mb-1">INTELLIAL SOLUTIONS PVT. LTD.</h4>
+    <p>
+      A-903, Empire Business Hub, Science City Rd, Sola,<br>
+      Ahmedabad, Gujarat, India
+    </p>
+  </div>
+
+  <!-- EMPLOYEE DETAILS -->
+  <div class="section-title">Employee Details</div>
+  <table class="table table-bordered mb-4">
+    <tbody>
+      <tr>
+        <th>Employee Name</th>
+        <td id="emp_name">{{ emp_name }}</td>
+        <th>Employee ID</th>
+        <td>employee_{{ emp_id }}</td>
+      </tr>
+      <tr>
+        <th>Designation</th>
+        <td id="emp_designation">{{ emp_designation }}</td>
+        <th>Pay Period</th>
+        <td>
+            
+    <form id="frmDateUpdate" method="post"  action="/spw_test/salary_slip/{{ emp_id }}/">
+        {% csrf_token %}
+        <input type="hidden" name="employee_id" id="employee_id" value="{{ emp_id }}">
+
+        <input type="month"
+               id="payPeriod"
+               name="month"
+               class="form-control"
+               value="{{ selected_month }}">
+    </form>
+
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ATTENDANCE -->
+  <div class="section-title ">Attendance Details</div>
+  <table class="table table-bordered mb-4 attendance">
+    <tbody>
+      <tr>
+        <th>Total Days</th>
+        <th>Leaves Taken</th>
+        <th>LWP</th>
+      </tr>
+      <tr>
+        <td id="totalDays">{{ total_days }}</td>
+        <td id="leavesTaken">{{ leaves_taken }}</td>
+        <td id="lwpf">{{ lwp }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- SALARY BREAKDOWN -->
+  <div class="section-title">Salary Breakdown</div>
+  <table class="table table-bordered mb-4">
+    <thead>
+      <tr>
+        <th>Earnings</th>
+        <th class="text-end">Amount (₹)</th>
+        <th>Deductions</th>
+        <th class="text-end">Amount (₹)</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>Basic Salary</td>
+        <td class="text-end" id="basic_salary">{{ basic }}</td>
+        <td>Provident Fund (12%)</td>
+        <td class="text-end" id="pf_salary">{{ pf }}</td>
+      </tr>
+
+      <tr>
+        <td>House Rent Allowance (40%)</td>
+        <td class="text-end" id="hra_salary">{{ hra }}</td>
+        <td>LWP Deduction</td>
+        <td class="text-end" id="lwp_deduction">{{ lwp_deduction }}</td>
+      </tr>
+
+      <tr>
+        <td>Special Allowance</td>
+        <td class="text-end" id="special_allowance">{{ special }}</td>
+        <td>Other Deductions</td>
+        <td class="text-end" id="other_deduction">{{ other_deduction }}</td>
+      </tr>
+
+      <tr>
+        <td>Other Allowances</td>
+        <td class="text-end" id="other_allowance">{{ other_allowance }}</td>
+        <td>TDS (Income Tax)</td>
+        <td class="text-end">
+          <input type="number" id="tds" class="salary-input form-control" value="0.0">
+        </td>
+      </tr>
+
+      <tr>
+        <td>Conveyance Allowance</td>
+        <td class="text-end">
+          <input type="number" id="conveyance" class="salary-input form-control" value="0.0">
+        </td>
+        <td>Professional Tax</td>
+        <td class="text-end" id="professional_tax">{{ professional_tax }}</td>
+      </tr>
+
+      <tr>
+        <td>Medical Allowance</td>
+        <td class="text-end">
+          <input type="number" id="medical" class="salary-input form-control" value="0.0">
+        </td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tbody>
+
+    <tfoot>
+      <tr class="fw-bold">
+        <th>Gross Earnings</th>
+        <th class="text-end" id="grossEarnings">{{ gross_earnings }}</th>
+        <th>Total Deductions</th>
+        <th class="text-end" id="totalDeductions">{{ total_deductions }}</th>
+      </tr>
+    </tfoot>
+  </table>
+
+  <!-- NET SALARY -->
+  <table class="table table-bordered net">
+    <tr>
+      <th>Net Salary Payable</th>
+      <td class="text-end net-salary" id="netSalary">₹{{ net_salary }}</td>
+    </tr>
+  </table>
+
+  <p class="small mt-3">
+    This is a computer-generated document and does not require a signature.
+  </p>
+
+</div>
+
+<!-- FIXED VALUES FROM BACKEND -->
+<input type="hidden" id="basic" value="{{ basic }}">
+<input type="hidden" id="hra" value="{{ hra }}">
+<input type="hidden" id="special" value="{{ special }}">
+<input type="hidden" id="otherAllowance" value="{{ other_allowance }}">
+<input type="hidden" id="pf" value="{{ pf }}">
+<input type="hidden" id="lwp" value="{{ lwp }}">
+<input type="hidden" id="lwpDeduction" value="{{ lwp_deduction }}">
+<input type="hidden" id="otherDeduction" value="{{ other_deduction }}">
+<input type="hidden" id="professionalTax" value="{{ professional_tax }}">
+<form id="pdfDownloadForm" method="POST" action="/spw_test/salary_slip_download/">
+  {% csrf_token %}
+  <input type="hidden" name="payload" id="pdfPayload">
+</form>
+
+<div class="modal-footer" role="tablist">
+  <button
+    class="btn"
+    data-dismiss="modal"
+    aria-hidden="true"
+    id="btnClose"
+    ng-click="onClose($event);"
+  >
+    Close
+  </button>
+  <button
+    class="applyBtn btn btn-primary"
+    ng-click="onDownload($event);"
+    ng-disabled="btnDisabled"
+    edit-mode="true"
+  >
+    Download
+  </button>
+</div>
+</div>
+
+

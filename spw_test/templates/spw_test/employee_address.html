@@ -1,0 +1,176 @@
+<style>
+    .applyBtn{
+        background:#337ab7;
+        color: white;
+    }
+    .applyBtn:hover{
+        background: white;
+        color: black;
+        border: 1px solid #bebebe;
+    }
+</style>
+<div class="modal-body details-body">
+  <form
+    id="frmSaveEmployeeAddress"
+    action="/spw_test/employee_address_save/"
+    method="POST"
+    role="form"
+    class="form-horizontal"
+    enctype="multipart/form-data"
+  >
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+
+        <!-- EMPLOYEE DROPDOWN -->
+        <div class="form-group">
+          <label for="id_employee" class="control-label col-sm-1 required">Employee</label>
+          <div class="col-sm-4">
+            <!-- <select
+              id="id_employee"
+              name="employee"
+              class="form-control"
+              required
+            >
+              <option value="">-- Select Employee --</option>
+
+              {% for emp in employees %}
+                <option 
+                  value="{{ emp.id }}"
+                  {% if emp.id == selected_employee_id %}selected{% endif %}
+                >
+                  {{ emp.first_name }} {{ emp.last_name }}
+                </option>
+              {% endfor %}
+            </select> -->
+            <input type="text" name="employee" id="id_employee" value='[{{address.employee_id}}]'>
+          </div>
+        </div>
+        <!-- END EMPLOYEE DROPDOWN -->
+
+        <div class="form-group">
+          <label required for="id_address" class="control-label col-sm-1 required">
+            Address
+          </label>
+          <div class="col-sm-4">
+            <input
+              class="form-control"
+              id="id_address"
+              type="text"
+              maxlength="200"
+              name="address"
+              required
+              value="{{ address.address }}"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label required for="id_district" class="control-label col-sm-1 required">
+            District
+          </label>
+          <div class="col-sm-4">
+            <!-- <input
+              class="form-control"
+              id="id_district"
+              type="text"
+              maxlength="200"
+              name="district"
+              required
+              value="{{ address.district }}"
+            /> -->
+            
+            <input type="text" name="district" id="id_district" value='["{{ address.district }}"]'>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label required for="id_state" class="control-label col-sm-1 required">
+            State
+          </label>
+          <div class="col-sm-4">
+            <!-- <input
+              class="form-control"
+              id="id_state"
+              type="text"
+              maxlength="200"
+              name="state"
+              required
+              value="{{ address.state }}"
+            /> -->   
+             <input type="text" name="state" id="id_state" value='["{{ address.state }}"]'>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label required for="id_country" class="control-label col-sm-1 required">
+            Country
+          </label>
+          <div class="col-sm-4">
+            <!-- <input
+              class="form-control"
+              id="id_country"
+              type="text"
+              maxlength="200"
+              name="country"
+              required
+              value="{{ address.country }}"
+            /> -->
+            
+            <input type="text" name="country" id="id_country" value='["{{ address.country }}"]'>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label required for="id_pin_code" class="control-label col-sm-1 required">
+            Pin code
+          </label>
+          <div class="col-sm-4">
+            <input
+              class="form-control"
+              id="id_pin_code"
+              type="number"
+              maxlength="10"
+              name="pin_code"
+              required
+              value="{{ address.pin_code }}"
+            />
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer details-footer" role="tablist">
+  <button
+    class="btn"
+    data-dismiss="modal"
+    aria-hidden="true"
+    id="btnClose"
+    ng-click="onClose($event);"
+  >
+    Close
+  </button>
+
+  <button
+    class="applyBtn btn btn-primary"
+    ng-click="saveEmployeeAddress($event);"
+    ng-disabled="btnDisabled"
+    edit-mode="true"
+  >
+    Save
+  </button>
+
+  <button
+    id="idEditBtn"
+    style="display: none;"
+    class="btn btn-primary pull-right"
+    ng-click="saveEmployeeAddress($event);"
+    ng-disabled="btnDisabled"
+    edit-mode="false"
+  >
+    Edit
+  </button>
+</div>

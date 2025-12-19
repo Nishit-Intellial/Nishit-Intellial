@@ -1,0 +1,18 @@
+/* custom_admin.css */
+/* .navbar {
+    background-color: rgb(63, 63, 63) !important;
+    color: white !important;
+} */
+.btn-primary {
+    background-color: rgb(0, 195, 255) !important;
+    border-color:  rgb(0, 195, 255) !important;
+}
+.accent {
+    color: rgb(63, 63, 63) !important;
+}
+/* static/css/custom_admin.css */
+.brand-link img {
+    content: url('/static/images/logo.png') !important;
+   /* width: 120px; /* adjust as needed */
+    height: auto;
+}

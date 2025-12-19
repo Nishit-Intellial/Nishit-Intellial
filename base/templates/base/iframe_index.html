@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title ng-bind="pageTitle"></title>
+    {% load static %}
+    {% load i18n %}
+    <!--
+    ALL CSS bundled into bundle.min.css
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/bootstrap.min.css' %}?v=2" />
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/line-icons.css' %}?v=2.0" />
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/jquery.dataTables.css' %}?v=2.1">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/angular-datatables.css' %}?v=2">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/angular-advanced-searchbox.min.css' %}?v=2">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/datepicker.min.css' %}?v=2">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/datepicker3.min.css' %}?v=2">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/summernote.css' %}?v=2.1">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/magicsuggest-min.css' %}?v=2">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/colorpicker.css' %}?v=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/comments.css' %}?v=4.5">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/dragula.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/jkanban.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/fullcalendar.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/custom.css' %}?v=2.2">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/daterangepicker.css' %}?v=0.1">
+-->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link> -->
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/font-awesome.min.css' %}?v=0.1">
+    <!-- <link rel="stylesheet" type="text/css" href="https://sparrow-static.s3.eu-central-1.amazonaws.com/bundle.min.css" /> -->
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/bundle.min.css' %}?v=0.1">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/query-builder.default.min.css' %}?v=0.1">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/select2.min.css' %}?v=0.1">
+
+
+    <style>
+        .typeahead_search_popup {
+            max-width: -webkit-fill-available !important;
+        }
+
+        table.dataTable tbody tr {
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        a {
+            color: {
+                    {
+                    link_color
+                }
+            }
+
+            ;
+        }
+
+        a:hover {
+            color: {
+                    {
+                    link_color
+                }
+            }
+
+            ;
+        }
+
+        .bgimage-border {
+            border: 5px solid #0000ff;
+        }
+
+        .back-btn {
+            cursor: pointer;
+        }
+
+        body {
+            background: #fff;
+        }
+
+        .semi-bold {
+            font-family: 'ProximaNovaSemiBold';
+            font-size: 14px;
+        }
+
+        .ms-helper {
+            margin-top: 24px;
+            padding-right: 30px;
+            font-size: 11px;
+        }
+
+        .container {
+            width: 98%;
+        }
+
+        /* #app_container {
+        height: 100% !important
+      }*/
+        .frame-dialog iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .frame-dialog .modal-dialog {
+            width: 98%;
+        }
+
+        .nav-tabs>li.active {
+            border-bottom: 3px solid {
+                    {
+                    tab_color
+                }
+            }
+
+            ;
+        }
+
+        .btn-primary {
+            background: {
+                    {
+                    button_color
+                }
+            }
+
+            ;
+
+            border-color: {
+                    {
+                    button_color
+                }
+            }
+
+            ;
+        }
+
+        .btn-primary:hover {
+            background: {
+                    {
+                    button_color
+                }
+            }
+
+            ;
+
+            border-color: {
+                    {
+                    button_color
+                }
+            }
+
+            ;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+            border-radius: 0 !important;
+            background: none !important;
+            color: #000 !important;
+
+            border-bottom: 2px solid {
+                    {
+                    button_color
+                }
+            }
+
+            ;
+        }
+
+        .details-footer {
+            height: 56px !important;
+            width: 100%;
+            bottom: -10px;
+            position: fixed;
+        }
+
+        .selected-row-background {
+            background-color: {
+                    {
+                    row_color
+                }
+            }
+
+            !important;
+        }
+
+        /* General changes in sparrow */
+        .form-control {
+            /* border-radius: 4px !important; */
+            border: 1px solid #ededed !important;
+            padding-left: 5px;
+        }
+
+        .modal-body>ul>li>a:hover {
+            border-bottom: 3px solid {
+                    {
+                    tab_color
+                }
+            }
+
+            ;
+            font-weight: bold;
+        }
+
+        .nav-tabs>li>a:hover {
+            border-bottom: 3px solid {
+                    {
+                    tab_color
+                }
+            }
+
+            ;
+            font-weight: bold;
+        }
+
+        .nav-tabs>li>a {
+            color: {
+                    {
+                    tab_color
+                }
+            }
+        }
+
+        .tab-count {
+            color: {
+                    {
+                    tab_color
+                }
+            }
+
+            !important;
+        }
+
+        .modal-body input[disabled=disabled],
+        .modal-body input[readonly=readonly],
+        .read-only-mode {
+            border-bottom: 1px solid #ededed !important;
+            ;
+        }
+
+        .form-control,
+        .ms-ctn-focus {
+            background-image: linear-gradient(to bottom, #66afe9, #66afe9), linear-gradient(to bottom, #ededed, #ededed);
+        }
+
+        #colReOrderChange {
+            width: 17%;
+        }
+
+        @media (min-width: 768px) and (max-width: 1024px) {
+            #colReOrderChange {
+                width: 25%;
+            }
+        }
+
+        .ms-ctn {
+            height: auto;
+        }
+
+        @keyframes toastDuration {
+            from {
+                width: 0%;
+            }
+
+            to {
+                width: 100%;
+            }
+        }
+
+        .toast-container {
+            position: absolute;
+            top: 5px;
+            z-index: 9999999;
+            width: auto;
+            transform: translateY(calc(-100% + -10px));
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.25, 1.35);
+        }
+
+        .toast {
+            display: block;
+            width: 100%;
+            min-height: 3.75em;
+            border-radius: 5px;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .toast .toast-status-icon {
+            display: block;
+            float: left;
+            height: 3.75em;
+            width: 3em;
+            padding: 1.2em 0 1em 0.5em;
+        }
+
+        .toast .toast-status-icon i {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .toast .toast-content {
+            display: block;
+            float: left;
+            padding: 0.75em 1em 0em 0.5em;
+            line-height: 1.25;
+        }
+
+        .toast .toast-content span {
+            font-size: 16px;
+            font-weight: bold;
+            line-height: inherit;
+        }
+
+        .toast .toast-content p {
+            font-size: 12px;
+            line-height: inherit;
+            margin-top: 1px;
+        }
+
+        .toast .toast-close {
+            display: block;
+            float: right;
+            clear: right;
+            width: 2.25em;
+            height: 2.25em;
+            margin-top: 0.25rem;
+            margin-right: 0.5rem;
+            padding: 0.5rem;
+            background: transparent;
+            background-color: transparent;
+            border: none;
+        }
+
+        .toast .toast-close i {
+            display: block;
+            width: 100%;
+            height: 100%;
+            margin-right: 0;
+            margin-left: 0;
+            transform: none;
+        }
+
+        .toast .toast-duration {
+            position: relative;
+            display: block;
+            float: none;
+            clear: both;
+            height: 3px;
+            width: 100%;
+        }
+
+        .toast .toast-duration::after {
+            display: block;
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: inherit;
+            animation-timing-function: linear;
+        }
+
+        .toast.success {
+            background: #e9fbe9;
+            color: #1fad1f;
+        }
+
+        .toast.success span {
+            color: #1fad1f;
+        }
+
+        .toast.success p {
+            color: #178217;
+        }
+
+        .toast.error {
+            background: #fde9e7;
+            color: #ec2513;
+        }
+
+        .toast.error span {
+            color: #ec2513;
+        }
+
+        .toast.error p {
+            color: #8e160b;
+        }
+
+        .toast-container.active {
+            transform: translateY(0%);
+        }
+
+        .mo-buildup-details {
+            width: 75% !important;
+            margin: 30px auto;
+        }
+
+        .mo-buildup-details>div.modal-dialog {
+            margin: 0 0;
+        }
+
+        .add_buildup_type {
+            width: 32% !important;
+            margin: 30px auto;
+            height: 400px;
+            top: 15px !important;
+        }
+
+        .add_buildup_type>div.modal-dialog {
+            margin: 0 0;
+        }
+
+        .add_buildup_type>div>div.modal-content {
+            height: 200px !important;
+        }
+
+        .add_buildup_type>div>div>div.modal-body {
+            height: 226px !important;
+            padding-top: 0;
+        }
+
+        .add_buildup_type iframe {
+            height: 187px !important;
+        }
+
+        .task_category {
+            width: 32% !important;
+            margin: 30px auto;
+            height: 400px;
+            top: 15px !important;
+        }
+
+        .task_category>div.modal-dialog {
+            margin: 0 0;
+        }
+
+        .task_category>div.modal-dialog>div.modal-content>div.modal-body {
+            padding-bottom: 0px;
+        }
+
+        .task_category iframe {
+            height: 116px !important;
+        }
+
+        .group_of_user {
+            width: 32% !important;
+            margin: 30px auto;
+            height: 400px;
+            top: 15px !important;
+        }
+
+        .group_of_user>div.modal-dialog {
+            margin: 0 0;
+        }
+
+        .group_of_user>div>div.modal-content {
+            height: 220px !important;
+        }
+
+        .group_of_user iframe {
+            height: 100% !important;
+        }
+
+        .language-icon {
+            color: black;
+            font-size: 18px;
+            cursor: pointer;
+            float: right;
+            padding: 5px;
+        }
+
+        .language-icon:hover {
+            color: blue;
+        }
+
+        .language_flag {
+            width: 17px;
+            margin-right: 5px;
+            border: 0px solid;
+            border-radius: 3px;
+        }
+
+        .alt-uom {
+            font-size: 11px;
+        }
+
+        .lang-field-data {
+            overflow: hidden;
+        }
+
+        .producer_flag {
+            width: 17px;
+            margin-right: 5px;
+            border: 0px solid;
+            border-radius: 3px;
+        }
+
+        .producer-clm {
+            width: auto !important;
+            min-width: 100px !important;
+        }
+
+        .errer-step-condition {
+            border-color: #a94442 !important;
+        }
+
+        .confirm-grouptask {
+            position: absolute;
+            height: 90px;
+            background: #fff;
+            border: 1px solid #EDEDED;
+            right: 2.5%;
+            bottom: 59px;
+            padding: 9px;
+            border-radius: 2px;
+            z-index: 999;
+            font-weight: normal !important;
+        }
+
+        .confirm-grouptask:before {
+            content: ' ';
+            position: absolute;
+            width: 0;
+            height: 0;
+            right: 13px;
+            top: 82px;
+            border: 7px solid;
+            border-color: #EDEDED transparent transparent #EDEDED;
+            rotate: 225deg;
+        }
+
+        .confirm-grouptask:after {
+            content: ' ';
+            position: absolute;
+            width: 0;
+            height: 0;
+            right: 13px;
+            top: 5.8em;
+            border: 7px solid;
+            border-color: #fff transparent transparent #fff;
+            rotate: 225deg;
+        }
+
+        #idColumnReorderDiv .selectedConfigColumn>.configColumnLabel,
+        #idColumnReorderDiv .configColumnLabel:hover {
+            background: linear-gradient(#0095ff, #0095ff);
+            color: #ffffff;
+            /* display: None; */
+        }
+
+        #idColumnReorderDiv .configColumn {
+            margin-bottom: 10px;
+            /* display: flex; */
+        }
+
+        @media (min-width: 1024px) and (max-width: 1440px) {
+            .mo-buildup-details {
+                width: 101% !important;
+                margin: 8px 0px 0px 5px;
+            }
+
+            .details-footer {
+                bottom: 15px !important;
+            }
+
+            .add_buildup_type {
+                width: 65% !important;
+            }
+
+            .all-language-detail {
+                width: 48% !important;
+            }
+        }
+
+        @media(max-width: 1024px) {
+            .details-footer {
+                height: 90px !important;
+                bottom: 0px !important;
+            }
+
+            .task_category {
+                width: 65% !important;
+            }
+
+            .task_category>div>div.modal-content {
+                height: 190px !important;
+            }
+
+            .task_category iframe {
+                height: 119px !important;
+            }
+        }
+
+        .ms-footer {
+            position: sticky;
+            bottom: 0;
+            padding: 6px 10px;
+            display: flex;
+            justify-content: left;
+            align-items: center;
+            font-size: 12px;
+            color: #555;
+            background: #f9f9f9;
+            border-top: 1px solid #ddd;
+            z-index: 20;
+        }
+
+        .ms-res-ctn {
+            padding-bottom: 0px;
+        }
+    </style>
+</head>
+
+<body class="nav-md" ng-app="sparrow" ng-controller="mainController">
+    <span id="loading-image" class="ele-center loader loader-double"></span>
+    <span id="loading-image-2" class="ele-center loader loader-double" style="display:none;"></span>
+    <!-- <img id="loading-image" class="ele-center" src="{% static 'base/images/spinner_68.gif' %}?v=2" alt="Loading..." /> -->
+
+    <!-- <div style="position: absolute; left: 50%;">
+        <div id="appMsg" style="position: relative; left: -50%;margin-top: 2px;z-index:9999;"></div>
+    </div> -->
+    <div style="width: 100%;display: flex;justify-content: center;">
+        <div id="toast-container" class="toast-container">
+            <div class="toast" id="id_toast_message" style="display: none;">
+                <div class="toast-status-icon">
+                    <i class="fa" style="font-size: 28px;" id="id_toast_icon"></i>
+                </div>
+                <div class="toast-content">
+                    <span style="font-size: 16px; font-weight: bold; line-height: inherit;" id="id_toast_span"></span>
+                    <p style="font-size: 12px; line-height: inherit; margin-top: 1px;" id="appMsg"></p>
+                </div>
+                <button class="toast-close" onclick="closeToast(event)">
+                    <i class="fa fa-close"></i>
+                </button>
+                <div class="toast-duration" id="id_toast_duration"></div>
+            </div>
+        </div>
+    </div>
+    <div class="container body">
+        <div class="main_container">
+            <!-- page content -->
+            <div class="row app-titlebar" id="app_container">
+
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div id="top_action_bar">
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div ng-view id="viewContainer" class="">
+                    </div>
+                </div>
+            </div>
+            <!-- /page content -->
+        </div>
+    </div>
+
+    <!-- <div id="iframe_model" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" id="iframe_close" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="iframe_title"></h4>
+                </div>
+                <div class="modal-body">
+                    <iframe src="" id="iframe"></iframe>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <div id="colReorder_model" class="modal fade" tabindex="-1" data-backdrop="static" role="dialog"
+        style="z-index: 2000;">
+        <div class="modal-dialog modal-lg" role="document" id="colReOrderChange">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="colReorderModalLabel">{% trans 'Configure columns' %}</h4>
+                </div>
+                <div id="colReorder_modal_body" class="modal-body">
+                    <div id="colReorder_form">
+                        <table style="width: 100%">
+                            <tr>
+                                <td style="width: 85%">
+                                    <div id="idColumnReorderDiv">
+
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="moveUpDownClass" style="font-size: 24px;">
+                                        <i class="icon-arrow-2-circle-up" onclick="sparrow.configColumnMove('up');"></i>
+                                        <i class="icon-arrow-2-circle-down"
+                                            onclick="sparrow.configColumnMove('down');"></i>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div style="margin-top: 10px;"><i>{% trans 'Check/uncheck to show/hide columns' %}</i></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans 'Cancel' %}</button>
+                    <button class="btn btn-primary" id="saveOrder" onclick="sparrow.saveColumnConfig()"
+                        ng-disabled="btnDisabled">{% trans 'Save' %}</button>
+                    <span id="reorderCallHidden" style="display: none;"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- task message modal -->
+    <div id="TaskModel2" class="modal right fade" data-backdrop="static" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close spw-close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">{% trans 'Add message' %}</h4>
+                </div>
+                <div class="modal-body" id="idTaskModel2" style="overflow-y: auto;">
+                    <div id="taskform">
+                        <form id="frmTask2" action="/task/save_task/" method="POST" role="form" class="form-horizontal">
+                        </form>
+                    </div>
+                    <div id="taskMsg2"></div>
+                </div>
+                <div style="display: none" id="group_task_confirm_model" class="confirm-grouptask">
+                    <p class="confirm_text">{% trans 'Are you sure you want to save this as a group task without
+                        assigning any user as a Task?' %}</p>
+                    <div style="float: right;">
+                        <a style="font-size: 12px;" onclick='saveasGroupTask()' class="btn btn-primary">{% trans 'Yes'
+                            %}</a>
+                        <a style="font-size: 12px;" onclick='closeGroupTask()' class="btn confirm_no">{% trans 'No'
+                            %}</a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans 'Close' %}</button>
+                    <a type="" class="" onclick="editTemplate();" id="id_edit_draft" value="{% trans 'Save' %}"
+                        style="text-decoration: none;float: left; margin-top: 5px;display: none">{% trans 'Save' %}</a>
+                    <a href="javascript:void(0)" id="id_save_draft_new" value="{% trans 'Save as template' %}"
+                        style="text-decoration: none;float: left; margin-top: 5px;">{% trans 'Save as template' %}</a>
+                    <input type="button" class="btn btn-primary" onclick="saveTask(false);" id="id_save_task"
+                        value="{% trans 'Send' %}" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- language translate modal -->
+    <div id="allLanguagesModal" class="modal fade" tabindex="-1" role="dialog" style="z-index: 11000 !important">
+        <div class="modal-dialog modal-lg" role="document" style="width: 36%">
+            <div class="modal-content" id="all_language_detail">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="allLanguageLabel">Translation</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="" action="" method="POST" role="form" class="form-horizontal ng-pristine ng-valid"
+                        enctype="multipart/form-data">
+                        <div style="padding-left: 15px;" class="row">
+                            <div class="col-md-12 width-100" id="languageFormContainer"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                    <button class="btn btn-primary" id="id_all_lang_save" ng-click="saveAllLanguageData($event);"
+                        ng-disabled="btnDisabled">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- production info modal -->
+    <div id="ProductionsInfoModal" class="modal fade" tabindex="-1" role="dialog" style="z-index: 11000 !important">
+        <div class="modal-dialog modal-lg" role="document" style="width: 1200px !important;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="ProductionsInfoLabel"></h4>
+                </div>
+                <div class="modal-body details-body">
+                    <div id="gridCon">
+                        <div class="modal-body" style="padding-top: 0;">
+                            <div id="OperationProductionsInfoForm"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- step step notes modal -->
+    <div id="StepNotesModal" class="modal fade" tabindex="-1" data-backdrop="static" role="dialog"
+        style="z-index: 11000 !important">
+        <div class="modal-dialog modal-lg" role="document" style="width: 1200px !important;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="StepNotesLabel"></h4>
+                </div>
+                <div class="modal-body details-body">
+                    <div id="gridCon">
+                        <div class="modal-body" style="padding-top: 0;">
+                            <div id="OperationStepsNotesForm"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- bundle.min.js contains following resources. -->
+
+    <!--  <script src="{% static 'base/js/jquery-1.11.2.min.js' %}?v=0.1"></script>
+  <script src="{% static 'base/js/bootstrap.min.js' %}?v=0.2"></script>
+  <script src="{% static 'base/js/jquery.dataTables.min.js' %}?v=0.2"></script>
+  <script src="{% static 'base/js/fastclick.js' %}?v=0.3"></script>
+  <script src="{% static 'base/js/nprogress.js' %}?v=0.1"></script>
+  <script src="{% static 'base/js/angular.js' %}?v=0.9"></script>
+  <script src="{% static 'base/js/angular-route.min.js' %}?v=0.4"></script>
+  <script src="{% static 'base/js/angular-datatables.min.js' %}?v=0.2"></script>
+  <script src="{% static 'base/js/angular-modal-service.min.js' %}?v=0.1"></script>
+  <script src="{% static 'base/js/angular-sanitize.js' %}?v=0.2"></script>
+  <script src="{% static 'base/js/jquery.qrcode.min.js' %}?v=0.2"></script>
+  <script src="{% static 'base/js/bootstrap-datepicker.min.js' %}?v=0.3"></script>
+  <script src="{% static 'base/js/ui-bootstrap-tpls.js' %}?v=0.1"></script>
+  <script src="{% static 'base/js/jquery.validate.min.js' %}?v=0.9"></script>
+  <script src="{% static 'base/js/magicsuggest.js' %}?v=0.4"></script>
+  <script src="{% static 'base/js/summernote.min.js' %}?v=0.2"></script>
+  <script src="{% static 'base/js/angularjs-datetime-picker.js' %}?v=0.2"></script>
+  <script src="{% static 'base/js/moment.min.js' %}?v=0.1"></script>
+  <script src="{% static 'base/js/jquery.copy-to-clipboard.js' %}?v=0.3"></script>
+  <script src="{% static 'base/js/ng-file-upload.js' %}?v=0.1"></script>
+  <script src="{% static 'base/js/mousetrap.min.js' %}?v=2"></script>
+  <script src="{% static 'base/js/shortcuts.js' %}?v=2"></script>
+  <script src="{% static 'base/js/jquery.scannerdetection.js' %}?v=2"></script>
+  <script src="{% static 'base/js/dragula.min.js' %}"></script>
+  <script src="{% static 'base/js/jkanban.min.js' %}"></script>
+  <script src="{% static 'base/js/Chart.min.js' %}"></script>
+  <script src="{% static 'base/js/moment-timezone-with-data.min.js' %}?v=0.2"></script>
+   -->
+    <!-- <script src="{% static 'base/js/bundle.min.js' %}?v=1.5"></script>     -->
+
+    <!-- <script src="https://sparrow-static.s3.eu-central-1.amazonaws.com/bundle.min.js"></script> -->
+    <script src="{% static 'base/js/bundle.min.js' %}?v=0.1"></script>
+    {% comment %}
+    <script src="{% static 'base/js/xml2json.js' %}?v=0.1"></script> {% endcomment %}
+
+    <!-- If Calender JS and dateranagepicker bundled, its function throws undefined error so it is excluded. -->
+    <script src="{% static 'base/js/daterangepicker.js' %}?v=0.3"></script>
+
+    <!-- Both JS is customized so keeped out of bundling -->
+    <script src="{% static 'base/js/angular-advanced-searchbox-tpls.js' %}?v=1.7"></script>
+    <script src="{% static 'base/js/magicsuggest.js' %}?v=0.10"></script>
+
+    <script src="{% static 'base/js/base.js' %}?v=15.09"></script>
+    <script src="{% static 'base/js/query-builder.standalone.js' %}?v=0.3"></script>
+    <script src="{% static 'base/js/comments.js' %}?v=2.34"></script>
+    <script src="{% static 'base/js/tasks.js' %}?v=3.16"></script>
+    <script src="{% static 'base/js/attachments.js' %}?v=3.33"></script>
+    <script src="{% static 'base/js/subscriptions.js' %}?v=0.8"></script>
+    <script src="{% static 'base/js/ang_gsttax.js' %}?v=0.7"></script>
+    <script src="{% static 'base/js/custom.js' %}?v=4.3"></script>
+
+    <script src="{% static 'base/js/routes.js' %}?v=41.54"></script>
+
+    <script src="{% static 'baseimport/js/import.js' %}?v=6.08"></script>
+
+    <script src="{% static 'mails/js/mail_screen.js' %}?v=1.10"></script>
+    <script src="{% static 'eurocircuits/js/ecorder.js' %}?v=0.2"></script>
+    <script src="{% static 'base/js/wh_location_picker.js' %}?v=1.13"></script>
+    {% comment %}
+    <script src="{% static 'base/js/jquery-searchbox.js' %}?v=1.7"></script> {% endcomment %}
+    <script src="{% static 'base/js/select2.min.js' %}?v=1.7"></script>
+    <script src="{% static 'base/js/preview-panel.js' %}?v=0.3"></script>
+
+
+    <script type="text/javascript">
+        function listboxMove(listID, direction) {
+            var listbox = document.getElementById(listID);
+            var selIndex = listbox.selectedIndex;
+            var increment = -1;
+            if (direction == 'up')
+                increment = -1;
+            else
+                increment = 1;
+            if ((selIndex + increment) < 0 ||
+                (selIndex + increment) > (listbox.options.length - 1)) {
+                return;
+            }
+            var selValue = listbox.options[selIndex].value;
+            var selText = listbox.options[selIndex].text;
+            listbox.options[selIndex].value = listbox.options[selIndex + increment].value
+            listbox.options[selIndex].text = listbox.options[selIndex + increment].text
+            listbox.options[selIndex + increment].value = selValue;
+            listbox.options[selIndex + increment].text = selText;
+            listbox.selectedIndex = selIndex + increment;
+        }
+
+        function saveColumnOrder() {
+            var colOrder = [];
+            var tableColIndex = parseInt($('#lstReorderCol').attr('index'));
+            $("#lstReorderCol option").each(function () {
+                colOrder.push(parseInt($(this).val()));
+            })
+
+            var url = window.location.href.split("/#")[1];
+            var digitRegx = /[0-9]/g;
+            var newUrl = url.replace(digitRegx, '');
+            var postData = {
+                colOrder: colOrder.join([separator = ',']),
+                url: newUrl,
+                tableColIndex: tableColIndex
+            }
+            console.log(postData);
+
+            sparrow.post("/base/set_col_order/", postData, false, function (data) {
+                if (data.code == 0) {
+                    console.log(data.msg);
+                } else {
+                    $('#colReorder_model').modal('hide');
+                    location.reload();
+                }
+            })
+        }
+
+        var webSocket = null;
+        (function webSocketInit() {
+            var websocket_endpoint = '{{ websocket_endpoint }}';
+            var userid = '{{userid}}'
+            if (websocket_endpoint == "") {
+                return
+            }
+
+            websocket_endpoint = websocket_endpoint + '{{userid}}/'
+            webSocket = new CustomWebSocket(websocket_endpoint);
+            var groupName = sparrow.getWebSocketGroupName(websocket_endpoint);
+            var pagePath = location.pathname + location.hash;
+
+            webSocket.bind('open', function (data) {
+                webSocket.send('ws_onconnect', {
+                    groupName: groupName,
+                    event: 'ws_onconnect',
+                    username: '{{username}}',
+                    pagePath: pagePath,
+                });
+            });
+
+            webSocket.bind('ws_message', function (data) {
+                if (userid != 1) {
+                    return
+                }
+                data = data['data']
+                var reloadHTML = "";
+                if (data.groupName == groupName) {
+                    if (data.code == 'updateFinish') {
+                        reloadHTML = ' Please <a class="update-reload" href="javascript:window.location.reload();">click here</a> to reload the page to take in effect new changes.';
+                    }
+                    document.getElementById("socketMessage").innerHTML = data.message + reloadHTML;
+                    $('.alert-fixed').addClass("show").removeClass("hide");
+                }
+            });
+        })();
+
+        // Function to handle the save as group task confirmation modal.
+        function saveasGroupTask() {
+            $("#group_task_confirm_model").hide(); // Hide modal
+            if (pendingDraftState !== null) {
+                saveTask(pendingDraftState, true); // Proceed to save, bypass confirmation
+            }
+            pendingDraftState = null;
+        }
+
+        function closeGroupTask() {
+            $("#group_task_confirm_model").hide(); // Just close the modal, do nothing
+            pendingDraftState = null;
+        }
+
+        function editTemplate() {
+            var taskId = $("#id_task2").val();
+            saveTask(true, false, taskId); // Save as draft with the current task ID
+        }
+
+        var pendingDraftState = null;
+        // For save all task details.
+        function saveTask(draft, skipConfirmation = false) {
+            // Validate the form using jQuery Validation plugin
+            var validator = $('#frmTask2').validate();
+            validator.form();
+            // if (!validator.valid()) {
+            //     return;
+            // }
+            taskId = 0
+            // Declare array to store assigned user IDs.
+            var assign_to_ids = [];
+            var isValid = true;
+
+            // Get values from hidden fields and inputs
+            var mfg_order = $("#hid_mfg_order2").val();
+            var machine = $("#hid_machine2").val();
+            var send_to = $("#hid_assign_to2").val();
+            var category = $("#hid_category").val();
+            var is_breakdown_maintenance = $("#chk_breakdown").is(":checked");
+            var is_feedback = $("#chk_feedback").is(":checked");
+            var is_group_task = $("#id_group_task").is(":checked");
+            var is_breakdown = $("#chk_breakdown").is(":checked");
+
+            // Get category code for validation
+            var ms_category = $("#id_category").magicSuggest();
+            var categorySelection = ms_category.getSelection();
+            var categoryCode = categorySelection[0]?.code || '';
+
+            // Set default error messages
+            var message_ = "Please enter required field.";
+            var category_message = "Please select category.";
+
+            // Skip validations if saving as draft
+            if (!draft) {
+                // Breakdown validation
+                if (is_breakdown && !machine) {
+                    $("#id_machine2").toggleClass("errer-step-condition", true);
+                    isValid = false;
+                }
+
+                // Category validation
+                if (!category) {
+                    $("#id_category").addClass("errer-step-condition");
+                    isValid = false;
+                }
+
+                // Category-specific validations
+                isValid = validateCategoryRequirements(categoryCode, isValid);
+
+                // Message validation
+                isValid = validateMessage(isValid);
+
+                // Machine validation for 'machine' category
+                if (categoryCode === 'machine' && (!machine || machine === "")) {
+                    $("#id_machine2").addClass("errer-step-condition");
+                    isValid = false;
+                }
+
+                // Assign to validation
+                isValid = validateAssignTo(isValid, message_);
+
+                // Attachment validation
+                isValid = validateAttachment(isValid);
+            }
+
+            // Setup event handlers for error removal
+            setupErrorHandlers(ms_category);
+
+            if (!isValid) {
+                return;
+            }
+
+            // Get assignment data
+            var assign_to = $("#id_assign_to2").magicSuggest();
+            var assign_to_data = assign_to.getSelection();
+            for (var i = 0; i < assign_to_data.length; i++) {
+                assign_to_ids.push(assign_to_data[i]["id"]);
+            }
+
+            // Build selection options
+            var selectionoption = buildSelectionOption();
+
+            // Group task confirmation check
+            if (!draft && shouldShowGroupTaskConfirmation(is_group_task, selectionoption, skipConfirmation)) {
+                pendingDraftState = draft;
+                $("#group_task_confirm_model").show();
+                return;
+            }
+
+            // Get related info
+            var related_to = getRelatedTo(mfg_order, machine);
+
+            // Get final values
+            var entity_id = $("#id_entity_id").val() || 0;
+            var app_name = $("#id_app_name").val();
+            var model_name = $("#id_model_name").val();
+            var task_attachment = $("#upload_file2").attr("atta_id");
+
+            // Get additional category-specific fields
+            var original_date = $("#id_original_date").val();
+            var task_order = $("#id_task_order").val();
+            var task_quantity = $("#id_task_quantity2").val();
+            var task_reason = $("#hid_task_reason2").val();
+            var task_reason_type = $("#hid_task_reason_type2").val();
+
+            var postData = {
+                app_name: app_name,
+                model_name: model_name,
+                entity_id: entity_id,
+                related_to: related_to,
+                task_id: taskId,
+                draft: draft,
+                assign_to_ids: JSON.stringify(assign_to_ids),
+                mfg_order_: mfg_order,
+                task_attachment: task_attachment,
+                selection_option_assign_to: JSON.stringify(selectionoption),
+                machine_id: machine,
+                is_breakdown_maintenance,
+                is_feedback,
+                original_date: original_date,
+                task_order: task_order,
+                quantity: task_quantity,
+                task_reason: task_reason ? task_reason : "",
+                task_reason_type: task_reason_type ? task_reason_type : "",
+            };
+            sparrow.postForm(
+                postData,
+                $('#frmTask2'),
+                false,
+                function (data) {
+                    if (data.code == 1) {
+                        $('#taskMsg').hide();
+                        $('#TaskModel').modal('hide');
+                        $('#btnListView').trigger('click');
+                        $("#id_send_to_username2").empty()
+                        sparrow.showMessage('appMsg', sparrow.MsgType.Success, data.msg, 10);
+                        location.reload();
+                    }
+                    else {
+                        sparrow.showMessage('appMsg', sparrow.MsgType.Error, data.msg, 5);
+                    }
+                }
+            );
+        }
+
+        function validateCategoryRequirements(categoryCode, isValid) {
+            $("#id_mfg_order2, #id_task_reason2, #id_task_reason_type2, #id_original_date, #id_machine2, #id_task_quantity2, #id_task_order").removeClass("errer-step-condition");
+            // Manufacturing categories that require mfg_order
+            const manufacturingCategories = ["MPRR", "TPRR"];
+
+            if (manufacturingCategories.includes(categoryCode)) {
+                var mfg_order = $("#hid_mfg_order2").val();
+                if (!mfg_order) {
+                    $("#id_mfg_order2").addClass("errer-step-condition");
+                    isValid = false;
+                }
+            }
+
+            const reasonCategories = ["PREP", "MPRR", "TPRR", "DIMA"];
+            if (reasonCategories.includes(categoryCode)) {
+                var task_reason = $("#hid_task_reason2").val();
+                if (!task_reason) {
+                    $("#id_task_reason2").addClass("errer-step-condition");
+                    isValid = false;
+                }
+                if (["MPRR", "TPRR"].includes(categoryCode)) {
+                    var task_reason_type = $("#hid_task_reason_type2").val();
+                    if (!task_reason_type) {
+                        $("#id_task_reason_type2").addClass("errer-step-condition");
+                        isValid = false;
+                    }
+                }
+            }
+
+            // DIMA specific validations
+            if (categoryCode === "DIMA") {
+                var original_date = $("#id_original_date").val();
+                var machine = $("#hid_machine2").val();
+
+                if (!original_date) {
+                    $("#id_original_date").addClass("errer-step-condition");
+                    isValid = false;
+                }
+
+                if (!machine) {
+                    $("#id_machine2").addClass("errer-step-condition");
+                    isValid = false;
+                }
+            }
+
+            // FQCR specific validations
+            if (categoryCode === "FQCR") {
+                var task_order = $("#id_task_order").val();
+                var quantity = $("#id_task_quantity2").val();
+                var compeleted_order = $("#id_complete_order").is(":checked");
+                if (!quantity) {
+                    $("#id_task_quantity2").addClass("errer-step-condition");
+                    isValid = false;
+                }
+                if (!compeleted_order && parseInt(quantity) <= 0) {
+                    $("#id_task_quantity2").addClass("errer-step-condition");
+                    isValid = false;
+                    sparrow.showMessage("appMsg", sparrow.MsgType.Error, "Quantity should be greater than 0.", 3);
+                }
+
+                if (!task_order) {
+                    $("#id_task_order").addClass("errer-step-condition");
+                    isValid = false;
+                }
+            }
+
+            return isValid;
+        }
+
+        function validateMessage(isValid) {
+            var message_html = $('.richtext').summernote('code');
+            var message_text = message_html.replace(/<[^>]*>/g, "")
+                .replace(/&nbsp;|&#160;/gi, ' ')
+                .replace(/\s+/g, '').trim();
+
+            var hasImage = /<img\s+[^>]*src=["']([^"']+)["']/i.test(message_html);
+
+            if (message_text.length === 0 && !hasImage) {
+                $("#id_message_description2").css("color", "#a94442").show();
+                isValid = false;
+            } else {
+                $("#id_message_description2").hide();
+            }
+
+            return isValid;
+        }
+
+        function validateAssignTo(isValid, message_) {
+            var send_ids = $("#id_for_send_ids").val() ? JSON.parse($("#id_for_send_ids").val()) : {};
+
+            if (Object.keys(send_ids).length === 0) {
+                $("#id_assign_to2").addClass("errer-step-condition");
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        function validateAttachment(isValid) {
+            var attachment_message = "Attachment file name is too long.";
+            var attachment = $("#id_attachment").val();
+
+            if (attachment !== "") {
+                var files_ = attachment.split("\\");
+                if (files_.slice(-1)[0].length > 170) {
+                    sparrow.showMessage("appMsg", sparrow.MsgType.Error, attachment_message, 3);
+                    isValid = false;
+                }
+            }
+
+            return isValid;
+        }
+
+        function setupErrorHandlers(ms_category) {
+            // Category error handler
+            $(ms_category).on("selectionchange", function (e, m) {
+                $("#id_category").removeClass("errer-step-condition");
+            });
+
+            // Machine error handler
+            var ms_machine = $("#id_machine2").magicSuggest();
+            $(ms_machine).on("selectionchange", function (e, m) {
+                $("#id_machine2").removeClass("errer-step-condition");
+            });
+
+            // Assign to error handler
+            var assign_to = $("#id_assign_to2").magicSuggest();
+            $(assign_to).on("selectionchange", function (e, m) {
+                $("#id_assign_to2").removeClass("errer-step-condition");
+            });
+
+            var reason_ms = $("#id_task_reason2").magicSuggest();
+            $(reason_ms).on("selectionchange", function (e, m) {
+                $("#id_task_reason2").removeClass("errer-step-condition");
+            });
+
+            var reason_type_ms = $("#id_task_reason_type2").magicSuggest();
+            $(reason_type_ms).on("selectionchange", function (e, m) {
+                $("#id_task_reason_type2").removeClass("errer-step-condition");
+            });
+
+            var mfg_order_number = $("#id_mfg_order2").magicSuggest();
+            $(mfg_order_number).on("selectionchange", function (e, m) {
+                $("#id_mfg_order2").removeClass("errer-step-condition");
+            });
+        }
+
+        function buildSelectionOption() {
+            var send_ids = $("#id_for_send_ids").val() ? JSON.parse($("#id_for_send_ids").val()) : {};
+            var selectionoption = { group: {}, user: {} };
+
+            if (Object.keys(send_ids).length > 0) {
+                for (const item of send_to_ids) {
+                    const id = item.id;
+                    const type = item.type;
+                    const radioButtons_ = document.querySelectorAll(`.radio-buttons[data-id="${id}"][data-type="${type}"] .radio-button`);
+
+                    for (let i = 0; i < radioButtons_.length; i++) {
+                        var radioButton = radioButtons_[i];
+                        var index = radioButton.getAttribute("index");
+
+                        if (radioButton.classList.contains("selected")) {
+                            if (type === "group") {
+                                selectionoption.group[String(id)] = index == "1" ? "info" : "task";
+                            } else if (type === "user") {
+                                selectionoption.user[String(id)] = index == "1" ? "info" : "task";
+                            }
+                        }
+                    }
+                }
+
+                // Validate at least one selection
+                if (Object.keys(selectionoption.group).length === 0 && Object.keys(selectionoption.user).length === 0) {
+                    $("#id_assign_to2").addClass("errer-step-condition");
+                    return null;
+                }
+            }
+
+            return selectionoption;
+        }
+
+        function shouldShowGroupTaskConfirmation(is_group_task, selectionoption, skipConfirmation) {
+            if (!is_group_task || skipConfirmation || !selectionoption) {
+                return false;
+            }
+
+            var userValues = Object.values(selectionoption.user || {});
+            return userValues.every(function (value) {
+                return value !== 'task';
+            });
+        }
+
+        function getRelatedTo(mfg_order, machine) {
+            var related_to = null;
+
+            if (mfg_order) {
+                var mfg_order_number = $("#id_mfg_order2").magicSuggest();
+                var mfg_order_number_id = mfg_order_number.getSelection();
+                related_to = mfg_order_number_id[0]["name"];
+            }
+
+            if (machine) {
+                var machine_data = $("#id_machine2").magicSuggest();
+                var machine_data_ = machine_data.getSelection();
+                related_to = machine_data_[0]["machine_name"];
+            }
+
+            return related_to;
+        }
+
+    </script>
+
+    <script>
+        var eventMethod = window.addEventListener
+            ? "addEventListener"
+            : "attachEvent";
+        var eventer = window[eventMethod];
+        var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+
+        // Listen to message from child window
+        eventer(
+            messageEvent,
+            function (e) {
+                if (e.data == 'closestencilmodal') {
+                    $('.modal').modal('hide');
+                }
+            },
+            false
+        );
+
+        function closeToast() {
+            $(".toast-container").removeClass("active");
+            setTimeout(function () { $("#id_toast_message").hide() }, 300);
+        };
+    </script>
+    <script src="/jsi18n/"></script>
+</body>
+
+</html>
